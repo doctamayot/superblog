@@ -1,0 +1,52 @@
+
+
+<p id="notice"><%= notice %></p>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-9 col-sm-offset-1">
+      <p>
+        <strong>Titulo:</strong>
+        <%= markdown(@post.titulo) %>
+      </p>
+
+      <p class="text-justify">
+        <strong>Cuerpo:</strong>
+        <%= markdown(@post.cuerpo) %>
+      </p>
+      <div class="alert alert-warning">
+        Publicado hace <%=(@post.created_at.strftime("%d de %b del %Y a las %H:%M")) %>.
+      </div>
+      <% if signed_in? && @post.user == current_user %>
+      <%= link_to 'Atras', posts_path, class:"btn btn-info" %>
+      
+      <%= link_to 'Editar', edit_post_path(@post), class:"btn btn-success"%>
+
+      <td><%= link_to 'Eliminar', @post, method: :delete, data: { confirm: 'Are you sure?' }, class:"btn btn-danger mb-5" %></td>
+      <%end%>
+      
+     
+      <% @post.comments.each do |comment| %>
+        <div class="panel panel-default">
+          <header class="panel-heading"></header>
+          <div class="panel-body"><%= comment.body %>
+          </div>
+       
+      <% end %>
+
+      <% if signed_in? %>
+      
+        <%= form_for [@post, @post.comments.build] do |f| %>
+          <div class="form-group mt-0">
+            <%= f.text_area :body, class: "form-control", placeholder: "Agregar comentario" %>
+          </div>
+
+          <div class="actions text-right">
+            <%= f.submit "Comentar", class: "btn btn-primary" %>
+          </div>
+          
+        <% end %>
+      <% end %>
+      
+    </div>
+  </div>
+</div>  
